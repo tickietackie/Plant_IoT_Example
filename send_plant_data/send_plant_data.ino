@@ -30,9 +30,9 @@ char ssid[] = SECRET_SSID;       // your network SSID (name)
 char password[] = SECRET_PASS;       // your network password (use for WPA, or use as key for WEP)
 
 // MQTT settings (MODIFY TO APPROPRIATE BROKER AND LOGIN CREDENTIALS!)
-const char* mqtt_server = "mq.jreichwald.de";
-const char* mqtt_username = "casiot";
-const char* mqtt_passwd = "casiot";
+char mqtt_server[] = MQTT_SERVER;
+char mqtt_username[] = MQTT_USERNAME;
+char mqtt_passwd[] = MQTT_PASSWD;
 char outTopic[] = OUT_TOPIC;
 const int mqtt_port = 1883;
 const char* statusTopic = "dbt1/plantDataGroup5/dht11/status"; // set a uniqie topic by setting a username here!
