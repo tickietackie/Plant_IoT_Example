@@ -17,16 +17,21 @@ NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL); // The NTP 
 
 // DHT Sensor (Reference-Architecture from lecture)
 #define DHTTYPE DHT11 // may be DHT11 or DHT22 
+#if defined(ESP8266)
 uint8_t DHTPin = D1;  // DHT11-Sensor connected to Pin D1 (VCC should be connected to 3,3V, GRN to GRN)
 DHT dht(DHTPin, DHTTYPE); // Construct DHT Object for gathering data
+#elif defined(ESP32)
+//ESP32
+#else
+#error Unsupported hardware
+#endif
+
 float Temperature;
 float Humidity;
 
 // WIFI settings (MODIFY TO YOUR WIFI SETTINGS!)
 char ssid[] = SECRET_SSID;       // your network SSID (name)
 char password[] = SECRET_PASS;       // your network password (use for WPA, or use as key for WEP)
-//const char* ssid = "UptownDrunk";
-//const char* password = "21585541566812046010";
 
 // MQTT settings (MODIFY TO APPROPRIATE BROKER AND LOGIN CREDENTIALS!)
 const char* mqtt_server = "mq.jreichwald.de";
@@ -34,7 +39,7 @@ const char* mqtt_username = "casiot";
 const char* mqtt_passwd = "casiot";
 char outTopic[] = OUT_TOPIC;
 const int mqtt_port = 1883;
-//const char* statusTopic = "dbt1/username/dht11/status"; // set a uniqie topic by setting a username here!
+const char* statusTopic = "dbt1/username/dht11/status"; // set a uniqie topic by setting a username here!
 const String clientId = CLIENT_ID;
 
 // JSON-Document
