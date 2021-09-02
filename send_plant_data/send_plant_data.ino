@@ -1,5 +1,11 @@
 #if defined(ESP8266)
 #include <ESP8266WiFi.h>  // included in standard library 
+#elif defined(ESP32)
+#include "WiFi.h"
+#else
+#error Unsupported hardware
+#endif
+
 #include <PubSubClient.h> // Install PubSubClient via Library Manager 
 #include <DHT.h> // Install DHT Sensor Library via Library Manager 
 #include <ArduinoJson.h> // Install ArduinoJson via Library Manager 
@@ -19,8 +25,18 @@ NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL); // The NTP 
 // DHT Sensor (Reference-Architecture from lecture)
 #define DHTTYPE DHT11 // may be DHT11 or DHT22 
 
+#if defined(ESP8266)
 uint8_t DHTPin = D1;  // DHT11-Sensor connected to Pin D1 (VCC should be connected to 3,3V, GRN to GRN)
-DHT dht(DHTPin, DHTTYPE); // Construct DHT Object for gathering data
+DHT dht(DHTPin, DHTTYPE); // Construct DHT Object for gathering data 
+#elif defined(ESP32)
+// DHT Sensor (Reference-Architecture from lecture)
+#define DHT11PIN 16
+DHT dht(DHT11PIN, DHT11); // Construct DHT Object for gathering data
+#else
+#error Unsupported hardware
+#endif
+
+
 
 float Temperature;
 float Humidity;
@@ -172,9 +188,3 @@ void loop() {
 
   delay(5000);
 }
-
-#elif defined(ESP32)
-//ESP32
-#else
-#error Unsupported hardware
-#endif
