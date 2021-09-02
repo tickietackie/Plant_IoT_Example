@@ -11,7 +11,7 @@
 #include <ArduinoJson.h> // Install ArduinoJson via Library Manager 
 #include <NTPClient.h> // Install NTPClient Library via Library Manager 
 #include <WifiUdp.h> // included in standard library 
-#include "secret.h"
+#include "secret.h"   //maybe has to be 
 
 // Network Time Protocol (NTP): Settings for getting Timestamps
 // Note: ESP8266 does not have a battery-powered clock, so we need to fetch the current
