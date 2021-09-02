@@ -39,7 +39,7 @@ const char* mqtt_username = "casiot";
 const char* mqtt_passwd = "casiot";
 char outTopic[] = OUT_TOPIC;
 const int mqtt_port = 1883;
-const char* statusTopic = "dbt1/username/dht11/status"; // set a uniqie topic by setting a username here!
+const char* statusTopic = "dbt1/plantDataGroup5/dht11/status"; // set a uniqie topic by setting a username here!
 const String clientId = CLIENT_ID;
 
 // JSON-Document
