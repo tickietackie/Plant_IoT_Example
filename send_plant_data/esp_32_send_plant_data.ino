@@ -24,7 +24,7 @@ const char* ssid = SECRET_SSID;
 const char* password = SECRET_PASS;
 
 // MQTT settings (MODIFY TO APPROPRIATE BROKER AND LOGIN CREDENTIALS!)
-const char* mqtt_server = SECRET_SERVER.de;
+const char* mqtt_server = SECRET_SERVER;
 const char* mqtt_username = SECRET_USER ; 
 const char* mqtt_passwd = SECRET_PASS ; 
 const char* outTopic = OUT_TOPIC;  // set a unique topic by setting a username here! 
@@ -97,7 +97,6 @@ void reconnect() {
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println("callack called."); 
 }
-
 /**
  * This function is called prior to sending data to mqtt. 
  * The JSON document gets cleared first (to free memory and 
