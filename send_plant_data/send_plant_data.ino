@@ -3,7 +3,7 @@
 #include <DHT.h> // Install DHT Sensor Library via Library Manager 
 #include <ArduinoJson.h> // Install ArduinoJson via Library Manager 
 #include <NTPClient.h> // Install NTPClient Library via Library Manager 
-#include <WifiUdp.h> // included in standard library 
+#include <WiFiMulti.h>
 #include "secret.h"
 
 // Network Time Protocol (NTP): Settings for getting Timestamps
