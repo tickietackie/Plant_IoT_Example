@@ -1,6 +1,6 @@
 # Plant_IoT_Example
 
-Secret.h has to look like the following:
+secret.h has to look like the following:
 
 ```
 // Both SSID and password must be 8 characters or longer
