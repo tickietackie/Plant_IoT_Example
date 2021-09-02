@@ -24,9 +24,9 @@ const char* ssid = SECRET_SSID;
 const char* password = SECRET_PASS;
 
 // MQTT settings (MODIFY TO APPROPRIATE BROKER AND LOGIN CREDENTIALS!)
-const char* mqtt_server = "mq.jreichwald.de";
-const char* mqtt_username = "casiot" ; 
-const char* mqtt_passwd = "casiot" ; 
+const char* mqtt_server = SECRET_SERVER.de;
+const char* mqtt_username = SECRET_USER ; 
+const char* mqtt_passwd = SECRET_PASS ; 
 const char* outTopic = OUT_TOPIC;  // set a unique topic by setting a username here! 
 const char* statusTopic = "dbt1/username/dht11/status"; // set a uniqie topic by setting a username here! 
 const String clientId = CLIENT_ID;
