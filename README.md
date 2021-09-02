@@ -8,4 +8,7 @@ secret.h has to look like the following:
 #define SECRET_PASS "" //your wifi password
 #define CLIENT_ID "iAmUnique" //change this to a unique client id
 #define OUT_TOPIC "plantDataGroup5"
+#define MQTT_SERVER ""    //data from Moodle
+#define MQTT_USERNAME ""
+#define MQTT_PASSWD ""
 ```

@@ -1,3 +1,4 @@
+#if defined(ESP8266)
 #include <ESP8266WiFi.h>  // included in standard library 
 #include <PubSubClient.h> // Install PubSubClient via Library Manager 
 #include <DHT.h> // Install DHT Sensor Library via Library Manager 
@@ -17,14 +18,9 @@ NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL); // The NTP 
 
 // DHT Sensor (Reference-Architecture from lecture)
 #define DHTTYPE DHT11 // may be DHT11 or DHT22 
-#if defined(ESP8266)
+
 uint8_t DHTPin = D1;  // DHT11-Sensor connected to Pin D1 (VCC should be connected to 3,3V, GRN to GRN)
 DHT dht(DHTPin, DHTTYPE); // Construct DHT Object for gathering data
-#elif defined(ESP32)
-//ESP32
-#else
-#error Unsupported hardware
-#endif
 
 float Temperature;
 float Humidity;
@@ -34,9 +30,9 @@ char ssid[] = SECRET_SSID;       // your network SSID (name)
 char password[] = SECRET_PASS;       // your network password (use for WPA, or use as key for WEP)
 
 // MQTT settings (MODIFY TO APPROPRIATE BROKER AND LOGIN CREDENTIALS!)
-const char* mqtt_server = "mq.jreichwald.de";
-const char* mqtt_username = "casiot";
-const char* mqtt_passwd = "casiot";
+char mqtt_server[] = MQTT_SERVER;
+char mqtt_username[] = MQTT_USERNAME;
+char mqtt_passwd[] = MQTT_PASSWD;
 char outTopic[] = OUT_TOPIC;
 const int mqtt_port = 1883;
 const char* statusTopic = "dbt1/plantDataGroup5/dht11/status"; // set a uniqie topic by setting a username here!
@@ -176,3 +172,9 @@ void loop() {
 
   delay(5000);
 }
+
+#elif defined(ESP32)
+//ESP32
+#else
+#error Unsupported hardware
+#endif
