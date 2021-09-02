@@ -41,6 +41,7 @@ char outTopic[] = OUT_TOPIC;
 const int mqtt_port = 1883;
 const char* statusTopic = "dbt1/plantDataGroup5/dht11/status"; // set a uniqie topic by setting a username here!
 const String clientId = CLIENT_ID;
+String unquieId = "";
 
 // JSON-Document
 const size_t capacity = JSON_OBJECT_SIZE(6); // Increase size if you want to transmit larger documents
@@ -71,6 +72,8 @@ void setup_wifi() {
     delay(500);
     Serial.print(".");
   }
+
+  unquieId = WiFi.macAddress();
 
   randomSeed(micros());
 
@@ -123,7 +126,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 */
 void setJSONData(float humidity, float temp) {
   doc.clear();
-  doc["id"] = 123324;
+  doc["id"] = unquieId;
   doc["sensor"] = "DHT11";
   doc["time"] = timeClient.getFormattedTime();
   doc["humidity"] = humidity;
