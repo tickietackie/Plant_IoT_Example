@@ -11,7 +11,7 @@
 #include <ArduinoJson.h> // Install ArduinoJson via Library Manager 
 #include <NTPClient.h> // Install NTPClient Library via Library Manager 
 #include <WifiUdp.h> // included in standard library 
-#include "secret.h"   //maybe has to be 
+#include "secret.h"   //maybe has to be changed to the local path
 
 // Network Time Protocol (NTP): Settings for getting Timestamps
 // Note: ESP8266 does not have a battery-powered clock, so we need to fetch the current
@@ -52,6 +52,19 @@ const int mqtt_port = 1883;
 const char* statusTopic = "dbt1/plantDataGroup5/dht11/status"; // set a uniqie topic by setting a username here!
 const String clientId = CLIENT_ID;
 String plantId = "";
+
+//location service
+const char* Host = "www.unwiredlabs.com";
+String endpoint = "/v2/process.php";
+// UnwiredLabs API_Token. Signup here to get a free token https://unwiredlabs.com/trial
+String token = "pk.07fb53726988595d496d9b7ee9bb72f2";
+
+String jsonString = "{\n";
+
+// Variables to store unwiredlabs response
+double latitude = 0.0;
+double longitude = 0.0;
+double accuracy = 0.0;
 
 // JSON-Document
 const size_t capacity = JSON_OBJECT_SIZE(40); // Increase size if you want to transmit larger documents
@@ -142,8 +155,8 @@ void setJSONData(float humidity, float temp) {
   doc.clear();
   doc["transport_id"] = random(2147483647); //Max random value between 0 and 2147483647, 32 bit
   doc["id"] = plantId;
-  doc["sensor"] = "11";
-  doc["time"] = timeClient.getFormattedTime();
+  doc["sensor"] = "DHT11";
+  doc["time"] = timeClient.getEpochTime();
   doc["humidity"] = humidity;
   doc["temperature"] = temp;
 }
@@ -172,6 +185,10 @@ void loop() {
   if (!client.connected()) {
     reconnect();
   }
+
+  // WiFi.scanNetworks will return the number of networks found
+  int n = WiFi.scanNetworks();
+  Serial.println("scan done");
 
   // receive measured values from DHT11
   Temperature = dht.readTemperature(); // Gets the values of the temperature
