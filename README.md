@@ -1,5 +1,7 @@
 # Plant_IoT_Example
 
+To make it work, create a secret.h file at the .ino file.
+
 secret.h has to look like the following:
 
 ```
