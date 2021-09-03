@@ -1,6 +1,8 @@
 # Plant_IoT_Example
 
-Secret.h has to look like the following:
+To make it work, create a secret.h file at the .ino file.
+
+secret.h has to look like the following:
 
 ```
 // Both SSID and password must be 8 characters or longer
