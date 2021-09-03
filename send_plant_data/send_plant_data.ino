@@ -56,7 +56,7 @@ const String clientId = CLIENT_ID;
 String unquieId = "";
 
 // JSON-Document
-const size_t capacity = JSON_OBJECT_SIZE(6); // Increase size if you want to transmit larger documents
+const size_t capacity = JSON_OBJECT_SIZE(40); // Increase size if you want to transmit larger documents
 DynamicJsonDocument doc(capacity);
 
 WiFiClient espClient;  // The WIFI Client
