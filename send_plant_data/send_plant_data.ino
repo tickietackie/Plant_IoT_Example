@@ -36,14 +36,11 @@ DHT dht(DHTPin, DHT11); // Construct DHT Object for gathering data
 #error Unsupported hardware
 #endif
 
-float Temperature;
-float Humidity;
+float temperature;
+float humidity;
 
 // Soil Moisture Sensor
 #define SoilSensorPin 4  // used for ESP32
-
-float Soil = analogRead(SoilSensorPin);
-
 
 // WIFI settings (MODIFY TO YOUR WIFI SETTINGS!)
 const char ssid[] = SECRET_SSID;       // your network SSID (name)
@@ -60,7 +57,7 @@ const String clientId = CLIENT_ID;
 String plantId = "";
 
 // JSON-Document
-const size_t capacity = JSON_OBJECT_SIZE(40); // Increase size if you want to transmit larger documents
+const size_t capacity = JSON_OBJECT_SIZE(60); // Increase size if you want to transmit larger documents
 DynamicJsonDocument doc(capacity);
 
 WiFiClient espClient;  // The WIFI Client
@@ -181,13 +178,18 @@ void loop() {
   }
 
   // receive measured values from DHT11
-  Temperature = dht.readTemperature(); // Gets the values of the temperature
-  Humidity = dht.readHumidity(); // Gets the values of the humidity
-  //Temperature = 10;
-  //Humidity = 5;
+  temperature = dht.readTemperature(); // Gets the values of the temperature
+  humidity = dht.readHumidity(); // Gets the values of the humidity
+  //temperature = 10;
+  //humidity = 5;
 
+  // receive measured values from soil moisture sensor
+  float soil = analogRead(SoilSensorPin);
+  Serial.println(soil);
+  delay(30000);
+     
   // set measured data to preprared JSON document
-  setJSONData(Humidity, Temperature, Soil);
+  setJSONData(humidity, temperature, soil);
 
   // serialize JSON document to a string representation
   serializeJsonPretty(doc, msg);
