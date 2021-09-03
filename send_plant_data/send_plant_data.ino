@@ -1,10 +1,17 @@
+#if defined(ESP8266)
 #include <ESP8266WiFi.h>  // included in standard library 
+#elif defined(ESP32)
+#include "WiFi.h"
+#else
+#error Unsupported hardware
+#endif
+
 #include <PubSubClient.h> // Install PubSubClient via Library Manager 
 #include <DHT.h> // Install DHT Sensor Library via Library Manager 
 #include <ArduinoJson.h> // Install ArduinoJson via Library Manager 
 #include <NTPClient.h> // Install NTPClient Library via Library Manager 
-#include <WiFiMulti.h>
-#include "secret.h"
+#include <WifiUdp.h> // included in standard library 
+#include "secret.h"   //maybe has to be 
 
 // Network Time Protocol (NTP): Settings for getting Timestamps
 // Note: ESP8266 does not have a battery-powered clock, so we need to fetch the current
@@ -17,11 +24,14 @@ NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL); // The NTP 
 
 // DHT Sensor (Reference-Architecture from lecture)
 #define DHTTYPE DHT11 // may be DHT11 or DHT22 
+
 #if defined(ESP8266)
 uint8_t DHTPin = D1;  // DHT11-Sensor connected to Pin D1 (VCC should be connected to 3,3V, GRN to GRN)
 DHT dht(DHTPin, DHTTYPE); // Construct DHT Object for gathering data
 #elif defined(ESP32)
-//ESP32
+// DHT Sensor (Reference-Architecture from lecture)
+#define DHTPin 16
+DHT dht(DHTPin, DHT11); // Construct DHT Object for gathering data
 #else
 #error Unsupported hardware
 #endif
@@ -29,21 +39,28 @@ DHT dht(DHTPin, DHTTYPE); // Construct DHT Object for gathering data
 float Temperature;
 float Humidity;
 
+// Soil Moisture Sensor
+#define SoilSensorPin 4  // used for ESP32
+
+float Soil = analogRead(SoilSensorPin);
+
+
 // WIFI settings (MODIFY TO YOUR WIFI SETTINGS!)
-char ssid[] = SECRET_SSID;       // your network SSID (name)
-char password[] = SECRET_PASS;       // your network password (use for WPA, or use as key for WEP)
+const char ssid[] = SECRET_SSID;       // your network SSID (name)
+const char password[] = SECRET_PASS;       // your network password (use for WPA, or use as key for WEP)
 
 // MQTT settings (MODIFY TO APPROPRIATE BROKER AND LOGIN CREDENTIALS!)
-const char* mqtt_server = "mq.jreichwald.de";
-const char* mqtt_username = "casiot";
-const char* mqtt_passwd = "casiot";
-char outTopic[] = OUT_TOPIC;
+const char mqtt_server[] = MQTT_SERVER;
+const char mqtt_username[] = MQTT_USERNAME;
+const char mqtt_passwd[] = MQTT_PASSWD;
+const char outTopic[] = OUT_TOPIC;
 const int mqtt_port = 1883;
-const char* statusTopic = "dbt1/username/dht11/status"; // set a uniqie topic by setting a username here!
+const char* statusTopic = "dbt1/plantDataGroup5/dht11/status"; // set a uniqie topic by setting a username here!
 const String clientId = CLIENT_ID;
+String plantId = "";
 
 // JSON-Document
-const size_t capacity = JSON_OBJECT_SIZE(6); // Increase size if you want to transmit larger documents
+const size_t capacity = JSON_OBJECT_SIZE(40); // Increase size if you want to transmit larger documents
 DynamicJsonDocument doc(capacity);
 
 WiFiClient espClient;  // The WIFI Client
@@ -72,7 +89,13 @@ void setup_wifi() {
     Serial.print(".");
   }
 
-  randomSeed(micros());
+  plantId = WiFi.macAddress();
+
+  // if analog input pin 0 is unconnected, random analog
+  // noise will cause the call to randomSeed() to generate
+  // different seed numbers each time the sketch runs.
+  // randomSeed() will then shuffle the random function.
+  randomSeed(analogRead(0));
 
   // show some debug information on serial console
   Serial.println("");
@@ -121,13 +144,15 @@ void callback(char* topic, byte* payload, unsigned int length) {
    measured values (humidity and temperature) are set to
    the JSON document.
 */
-void setJSONData(float humidity, float temp) {
+void setJSONData(float humidity, float temp, float soil) {
   doc.clear();
-  doc["id"] = 123324;
-  doc["sensor"] = "DHT11";
+  doc["transport_id"] = random(2147483647); //Max random value between 0 and 2147483647, 32 bit
+  doc["id"] = plantId;
+  doc["sensor"] = "11";
   doc["time"] = timeClient.getFormattedTime();
   doc["humidity"] = humidity;
   doc["temperature"] = temp;
+  doc["soil"] = soil;
 }
 
 /**
@@ -135,6 +160,7 @@ void setJSONData(float humidity, float temp) {
 */
 void setup() {
   Serial.begin(115200);  // Set serial connection to 115200bps
+  
   pinMode(DHTPin, INPUT); // Set DHT-Pin to INPUT-Mode (so we can read data from it)
   dht.begin();
   setup_wifi();          // Call setup_wifi function
@@ -159,8 +185,9 @@ void loop() {
   Humidity = dht.readHumidity(); // Gets the values of the humidity
   //Temperature = 10;
   //Humidity = 5;
+
   // set measured data to preprared JSON document
-  setJSONData(Humidity, Temperature);
+  setJSONData(Humidity, Temperature, Soil);
 
   // serialize JSON document to a string representation
   serializeJsonPretty(doc, msg);
