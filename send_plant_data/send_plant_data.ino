@@ -30,7 +30,7 @@ uint8_t DHTPin = D1;  // DHT11-Sensor connected to Pin D1 (VCC should be connect
 DHT dht(DHTPin, DHTTYPE); // Construct DHT Object for gathering data
 #elif defined(ESP32)
 // DHT Sensor (Reference-Architecture from lecture)
-#define DHTPin 16
+#define DHTPin 13
 DHT dht(DHTPin, DHT11); // Construct DHT Object for gathering data
 #else
 #error Unsupported hardware
