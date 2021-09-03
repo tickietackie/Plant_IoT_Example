@@ -142,7 +142,7 @@ void setJSONData(float humidity, float temp) {
   doc.clear();
   doc["transport_id"] = random(2147483647); //Max random value between 0 and 2147483647, 32 bit
   doc["id"] = plantId;
-  doc["sensor"] = "DHT11";
+  doc["sensor"] = "11";
   doc["time"] = timeClient.getFormattedTime();
   doc["humidity"] = humidity;
   doc["temperature"] = temp;
