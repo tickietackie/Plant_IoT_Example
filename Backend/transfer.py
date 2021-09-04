@@ -17,62 +17,75 @@ def on_message(client, userdata, msg):
 
         print("message received " ,str(msg.payload.decode("utf-8")))
         data = json.loads(str(msg.payload.decode("utf-8")))
-        database_check_ids(data)
+        database_location_id(data)
+               
 
-def database_check_ids(json_data):
-    dbconC = mysql.connector.connect(**config)
-    cursorC = dbconC.cursor()
-    data_id = json_data['id']
-    get_id = "select id from plant where mac_address = %s"
+def database_location_id(json_data)
+    dbconL = mysql.connector.connect(**config)
+    cursorL = dbconL.cursor()
+    loc_id = json_data['location_id']
+    set_loc = "INSERT IGNORE INTO location (id, name) VALUES(%s,%s)"
+    val_loc = (loc_id,"")
+    cursorL.execute(set_loc, (val_loc,))
+    dbconL.commit()
+    cursorL.close()
+    dbconL.close()
+    database_check_area_id(data,loc_id) 
+
+def database_check_area(json_data,loc_id):
+    dbconA = mysql.connector.connect(**config)
+    cursorA = dbconC.cursor()
+    data_id = json_data['area_id']
+    get_id = "select id from area where mac_address = %s"
     get_val = (data_id)
-    cursorC.execute(get_id, (data_id,))
-    row = cursorC.fetchone()
+    cursorA.execute(get_id, (data_id,))
+    row = cursorA.fetchone()
     if row == None:
         #create id when mac_address has no id
-        create_id = "INSERT INTO plant (name,mac_address) VALUES(%s,%s)"
-        create_val = ('',data_id)
-        cursorC.execute(create_id,create_val)
-        dbconC.commit()
-        get_id = """select id from plant where mac_address = %s"""
+        create_id = "INSERT INTO area (location_id,mac_address) VALUES(%s,%s)"
+        create_val = (loc_id,data_id)
+        cursorA.execute(create_id,create_val)
+        dbconA.commit()
+        get_id = """select id from area where mac_address = %s"""
         get_val = (data_id)
-        cursorC.execute(get_id, (data_id,))
-        row = cursorC.fetchone()
+        cursorA.execute(get_id, (data_id,))
+        row = cursorA.fetchone()
         data_id = row[0]
-        cursorC.close()
-        dbconC.close()
-        database_insert_plantdata(json_data,data_id)
+        cursorA.close()
+        dbconA.close()
+        database_insert_sensordata(json_data,data_id)
     else:
         data_id = row[0]
-        database_insert_plantdata(json_data,data_id)
+        database_insert_sensordata(json_data,data_id)
 
-def database_insert_plantdata(json_data,db_id):
+def database_insert_sensordata(json_data,area_id):
     #data prep
     if 'transport_id' in json_data:
-        data_transport_id = json_data['transport_id']
+        data_sensor_transport_id = json_data['transport_id']
     else:
         return
-    data_plant_id = db_id
-    data_sensor = json_data['sensor']
-    data_humidity = json_data['humidity']
-    data_temperature = json_data['temperature']
-    if 'soil' in json_data:
-        data_soil = json_data['soil']
-    else:
-        data_soil = 0
+
     #data time prep
     try:
         data_time = json_data['time']
-        data_time = datetime.datetime.fromtimestamp(data_time).strftime('%Y-%m-%d %H:%M:%S')
+        data_sensor_time = datetime.datetime.fromtimestamp(data_time).strftime('%Y-%m-%d %H:%M:%S')
     except:
         return
-    dbcon = mysql.connector.connect(**config)
-    cursor = dbcon.cursor()  
-    val = (data_soil,data_plant_id, data_temperature, data_humidity, data_transport_id, data_sensor,data_time)
-    add_data = "INSERT INTO plant_data (soil, plant_id, temp, humidity, transport_id, sensor, time) VALUES (%s,%s,%s,%s,%s,%s,%s)"
-    cursor.execute(add_data,val)
-    dbcon.commit()
-    cursor.close()
-    dbcon.close()
+
+    data_sensor_area_id = area_id
+    for x in range(0,3):
+        dbconI = mysql.connector.connect(**config)
+        cursorI = dbconC.cursori()
+        data_sensor_value = json_data['sensor'][i]['value']
+        data_sensor_unit = json_data['sensor'][i]['unit']
+        data_sensor_type = json_data['sensor'][i]['type']
+        data_sensor_name = json_data['sensor'][i]['name']
+        add_data = "INSERT INTO plant_data (area_id, name, value, unit, type, time, transport_id) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        val = (data_sensor_area_id, data_sensor_name, data_sensor_value, data_sensor_unit, data_sensor_type, data_sensor_time, data_sensor_transport_id)
+        cursorI.execute(add_data,val)
+        dbconI.commit()
+        cursorI.close()
+        dbconI.close()   
 
 #mqtt connection info
 client = mqtt.Client()
