@@ -36,8 +36,11 @@ DHT dht(DHTPin, DHT11); // Construct DHT Object for gathering data
 #error Unsupported hardware
 #endif
 
-float Temperature;
-float Humidity;
+float temperature;
+float humidity;
+
+// Soil Moisture Sensor
+#define SoilSensorPin 32  // used for ESP32
 
 // WIFI settings (MODIFY TO YOUR WIFI SETTINGS!)
 const char ssid[] = SECRET_SSID;       // your network SSID (name)
@@ -134,8 +137,6 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());  // IP-Adress is obtained by DHCP, so write it to the console.*/
 }
 
-
-
 /**
    This function is called when we need to reconnect to the MQTT server.
    ALSO DO NOT TOUCH UNTIL YOU KNOW WHAT YOU'RE DOING!
@@ -186,7 +187,7 @@ void setJSONData(float humidity, float temp, float soil) {
   JsonObject sensor = sensorDoc.createNestedObject("DHT11");
   sensor["value"] = temp;
   sensor["unit"] = "C";
-  sensor["type"] = "temperatur3";
+  sensor["type"] = "temperature";
   sensor["name"] = "DHT11";
   doc["sensor"][0] = sensor;
 
@@ -194,7 +195,7 @@ void setJSONData(float humidity, float temp, float soil) {
 
   sensor["value"] = humidity;
   sensor["unit"] = "%";
-  sensor["type"] = "temperatur";
+  sensor["type"] = "humidity";
   sensor["name"] = "DHT11";
   doc["sensor"][1] = sensor;
 
@@ -209,7 +210,6 @@ void setJSONData(float humidity, float temp, float soil) {
   /* add further sensors here:
    *  
    *  sensor.clear();
-
       sensor["value"] = ;
       sensor["unit"] = "";
       sensor["type"] = "";
@@ -250,13 +250,17 @@ void loop() {
   }
 
   // receive measured values from DHT11
-  Temperature = dht.readTemperature(); // Gets the values of the temperature
-  Humidity = dht.readHumidity(); // Gets the values of the humidity
-  //Temperature = 10;
-  //Humidity = 5;
+  temperature = dht.readTemperature(); // Gets the values of the temperature
+  humidity = dht.readHumidity(); // Gets the values of the humidity
+  //temperature = 10;
+  //humidity = 5;
+
+  // receive measured values from soil moisture sensor
+  float soil = analogRead(SoilSensorPin);
+  delay(30000);
+       
   // set measured data to preprared JSON document
-  const int soil = 0;
-  setJSONData(Humidity, Temperature, soil);
+  setJSONData(humidity, temperature, soil);
 
   // serialize JSON document to a string representation
   serializeJson(doc, msg);
