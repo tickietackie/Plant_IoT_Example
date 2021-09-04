@@ -86,6 +86,7 @@ def database_insert_sensordata(json_data,area_id):
         dbconI.commit()
         cursorI.close()
         dbconI.close()   
+        
 
 #mqtt connection info
 client = mqtt.Client()
