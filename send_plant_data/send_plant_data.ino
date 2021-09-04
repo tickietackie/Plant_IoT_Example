@@ -67,13 +67,13 @@ double longitude = 0.0;
 double accuracy = 0.0;
 
 // JSON-Document
-const size_t capacity = JSON_OBJECT_SIZE(40); // Increase size if you want to transmit larger documents
+const size_t capacity = JSON_OBJECT_SIZE(512); // Increase size if you want to transmit larger documents
 DynamicJsonDocument doc(capacity);
 
 WiFiClient espClient;  // The WIFI Client
 PubSubClient client(espClient); // The MQTT client
 
-#define MSG_BUFFER_SIZE  (256) // Define the message buffer max size 
+#define MSG_BUFFER_SIZE  (1024) // Define the message buffer max size 
 char msg[MSG_BUFFER_SIZE]; // Define the message buffer
 
 unsigned long locationId = 0;
@@ -182,7 +182,7 @@ void setJSONData(float humidity, float temp, float soil) {
   doc["area_id"] = areaId;
   doc["time"] = timeClient.getEpochTime();
   
-  DynamicJsonDocument sensorDoc(512);
+  DynamicJsonDocument sensorDoc(100);
   JsonObject sensor = sensorDoc.createNestedObject("DHT11");
   sensor["value"] = temp;
   sensor["unit"] = "C";
@@ -259,7 +259,7 @@ void loop() {
   setJSONData(Humidity, Temperature, soil);
 
   // serialize JSON document to a string representation
-  serializeJsonPretty(doc, msg);
+  serializeJson(doc, msg);
   serializeJsonPretty(doc, Serial);
 
   // publish to MQTT broker
