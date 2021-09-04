@@ -137,8 +137,6 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());  // IP-Adress is obtained by DHCP, so write it to the console.*/
 }
 
-
-
 /**
    This function is called when we need to reconnect to the MQTT server.
    ALSO DO NOT TOUCH UNTIL YOU KNOW WHAT YOU'RE DOING!
@@ -192,7 +190,6 @@ void setJSONData(float humidity, float temp, float soil) {
   sensor["type"] = "temperature";
   sensor["name"] = "DHT11";
   doc["sensor"][0] = sensor;
-  doc["soil"] = soil;
 
   sensor.clear();
 
