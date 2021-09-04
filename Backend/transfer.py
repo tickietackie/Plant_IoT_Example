@@ -32,33 +32,43 @@ def database_check_ids(json_data):
         create_id = "INSERT INTO plant (name,mac_address) VALUES(%s,%s)"
         create_val = ('',data_id)
         cursorC.execute(create_id,create_val)
-        dbcon.commit()
+        dbconC.commit()
         get_id = """select id from plant where mac_address = %s"""
         get_val = (data_id)
         cursorC.execute(get_id, (data_id,))
-        data_id = cursorC.fetchone()
+        row = cursorC.fetchone()
         data_id = row[0]
         cursorC.close()
         dbconC.close()
         database_insert_plantdata(json_data,data_id)
     else:
+        data_id = row[0]
         database_insert_plantdata(json_data,data_id)
 
 def database_insert_plantdata(json_data,db_id):
     #data prep
-    data_transport_id = json_data['transport_id']
+    if 'transport_id' in json_data:
+        data_transport_id = json_data['transport_id']
+    else:
+        return
     data_plant_id = db_id
     data_sensor = json_data['sensor']
     data_humidity = json_data['humidity']
     data_temperature = json_data['temperature']
+    if 'soil' in json_data:
+        data_soil = json_data['soil']
+    else:
+        data_soil = 0
     #data time prep
-    data_time = json_data['time']
-    data_time = datetime.datetime.fromtimestamp(data_time).strftime('%Y-%m-%d %H:%M:%S')
-
+    try:
+        data_time = json_data['time']
+        data_time = datetime.datetime.fromtimestamp(data_time).strftime('%Y-%m-%d %H:%M:%S')
+    except:
+        return
     dbcon = mysql.connector.connect(**config)
     cursor = dbcon.cursor()  
-    val = (data_plant_id, data_temperature, data_humidity, data_transport_id, data_sensor,data_time)
-    add_data = "INSERT INTO plant_data (plant_id, temp, humidity, transport_id, sensor, time) VALUES (%s,%s,%s,%s,%s,%s)"
+    val = (data_soil,data_plant_id, data_temperature, data_humidity, data_transport_id, data_sensor,data_time)
+    add_data = "INSERT INTO plant_data (soil, plant_id, temp, humidity, transport_id, sensor, time) VALUES (%s,%s,%s,%s,%s,%s,%s)"
     cursor.execute(add_data,val)
     dbcon.commit()
     cursor.close()
