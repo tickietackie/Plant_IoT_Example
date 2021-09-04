@@ -1,0 +1,325 @@
+    1  ls
+    2  sessions
+    3  tightvnc
+    4  sudo apt-get update
+    5  sudo apt-get upgrade
+    6  sudo apt-get install xfce4 xfce4-session
+    7  sudo apt-get install vnc4server -y
+    8  sudo apt-get updage
+    9  sudo apt-get update
+   10  sudo apt-get upgrade
+   11  sudo apt install xfce4 xfce4-goodies
+   12  sudo apt install tightvncserver
+   13  vncserver
+   14  vncserver -kill :1
+   15  mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
+   16  nano ~/.vnc/xstartup
+   17  sudo chmod +x ~/.vnc/xstartup
+   18  vncserver
+   19  vnc
+   20  sudo apt-get install mosquitto-clients
+   21  vncserver -list
+   22  sudo nano /etc/systemd/system/vncserver@.service
+   23  sudo systemctl daemon-reload
+   24  sudo systemctl enable vncserver@1.service
+   25  vncserver -kill :1
+   26  sudo systemctl start vncserver@1
+   27  sudo nano /etc/systemd/system/vncserver@.servicesudo nano /etc/systemd/system/vncserver@.service
+   28  sudo systemctl daemon-reloadsudo systemctl daemon-reload
+   29  sudo systemctl daemon-reload
+   30  vncserver
+   31  vncserver -list
+   32  su marvin
+   33  sudo adduser marvin
+   34  su marvin
+   35  whoami
+   36  usermod -aG sudo marvin
+   37  sudo usermod -aG sudo marvin
+   38  sudo whoami
+   39  sudo reboot
+   40  su marvin
+   41  whoami
+   42  vncserver
+   43  ls
+   44  cd ..
+   45  ls
+   46  cd ubuntu/
+   47  ls
+   48  cd ~
+   49  cd .vnc
+   50  ls
+   51  nano xstartup
+   52  nano xstartup.bak 
+   53  cp xstartup /home/marvin/.vnc/
+   54  sudo cp xstartup /home/marvin/.vnc/
+   55  sudo cp xstartup.bak /home/marvin/.vnc/
+   56  exit
+   57  vncserver -l
+   58  sudo apt-get remove tightvnc
+   59  sudo apt remove tightvncserver
+   60  sudo apt-get install vnc4server vnc-java 
+   61  sudo apt install tigervnc-standalone-server -y 
+   62  vncpasswd
+   63  su - marvin
+   64  ls
+   65  sudo snap install --classic code
+   66  vncserver -list
+   67  vncserver -kill 1
+   68  vncserver -kill :1
+   69  vncserver -kill :2
+   70  vncserver -kill :3
+   71  vncserver -kill :4
+   72  vncserver -kill :5
+   73  vncserver -list
+   74  vncserver -localhost no
+   75  su marvin
+   76  vncserver -list
+   77  su marvin
+   78  vncserver -list
+   79  vncserver -localhost no
+   80  vncserver -list
+   81  ls
+   82  whoami
+   83  mysql
+   84  sudo apt-get install mysql-client
+   85  ls
+   86  mysql
+   87  sudo su
+   88  mysql
+   89  sudo su
+   90  mysql -u root -h 10.1.0.237 -P 3306
+   91  mysql -u root -h 193.148.167.126 -P 3306
+   92  mysql -h 10.1.0.237 -u root -p
+   93  mysql -h 10.1.0.237 -u root -p root
+   94  mysql -h 10.1.0.237 -u root
+   95  mysql -h 10.1.0.237 -u root -P 3306
+   96  telnet 10.1.0.237:3306
+   97  mysql -h 10.1.0.237 -u root -P 3306
+   98  mysql -h 10.1.0.237 -u plant -P 3306
+   99  exit
+  100  mysql -h 10.1.0.237 -u plant -P 3306
+  101  exit
+  102  mysql -h 10.1.0.237 -u plant -P 3306
+  103  ls
+  104  mkdir workspace
+  105  cd workspace/
+  106  ls
+  107  nano transfer.py
+  108  python3 transfer.py 
+  109  nano transfer.py
+  110  python3 transfer.py 
+  111  nano transfer.py
+  112  python3 transfer.py 
+  113  nano transfer.py
+  114  python3 transfer.py 
+  115  nano transfer.py
+  116  python3 transfer.py 
+  117  mysql -h 10.1.0.237 -u plant -P 3306
+  118  ls
+  119  nano transfer.py 
+  120  sudo su
+  121  mysql -h 10.1.0.237 -u plant -P 3306
+  122  ls
+  123  nano transfer.py 
+  124  rm transfer.py 
+  125  nano transfer.py
+  126  python3 transfer.py 
+  127  pip install paho-mqtt
+  128  python3 transfer.py 
+  129  nano transfer.py
+  130  python3 transfer.py 
+  131  nano transfer.py
+  132  python3 transfer.py 
+  133  nano transfer.py
+  134  python3 transfer.py 
+  135  mysql -h 10.1.0.237 -u plant -P 3306
+  136  ls
+  137  nano transfer.py 
+  138  rm transfer.py 
+  139  nano transfer.py 
+  140  python3 transfer.py 
+  141  rm transfer.py 
+  142  nano transfer.py
+  143  python3 transfer.py 
+  144  rm transfer.py 
+  145  nano transfer.py
+  146  python3 transfer.py 
+  147  mysql -h 10.1.0.237 -u plant -P 3306
+  148  rm transfer.py 
+  149  nano transfer.py
+  150  python3 transfer.py 
+  151  mysql -h 10.1.0.237 -u plant -P 3306
+  152  rm transfer.py 
+  153  nano transfer.py
+  154  python3 transfer.py 
+  155  ls
+  156  sudo su
+  157  mysql -h 10.1.0.237 -u plant -P 3306
+  158  cd desktop
+  159  /home/ubuntu/Desktop/
+  160  cd /home/ubuntu/Desktop/
+  161  git clone https://github.com/tickietackie/Plant_IoT_Example.git
+  162  pip install Flask
+  163  sudo apt install python3-pip
+  164  pip install Flask
+  165  export FLASK_APP=/home/ubuntu/Desktop/Plant_IoT_Example/frontend/routes.py
+  166  flask run
+  167  sudo apt install python3-flask
+  168  flask run
+  169  flask run --host=0.0.0.0
+  170  pip install pyopenssl
+  171  openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365
+  172  sudo apt install firefox
+  173  flask run --host=0.0.0.0
+  174  sudo apt-get update && sudo apt-get install mysql-server
+  175  sudo apt-get install mysql-workbench
+  176  sudo apt-get update
+  177  sudo dpkg -i mysql-apt-config_0.5.3-1_all.deb
+  178  sudo apt-get install mysql-workbench-community
+  179  sudo dpkg -i '/home/ubuntu/Downloads/mysql-apt-config_0.8.19-1_all.deb' 
+  180  sudo apt-get install mysql-workbench-community
+  181  sudo apt-get update
+  182  sudo apt-get install mysql-workbench-community
+  183  pip install pyodbc
+  184  sudo apt-get install unixodbc unixodbc-dev
+  185  pip install pyodbc
+  186  pip install mysql-connector-python
+  187  pip3 install mysql-connector
+  188  ls
+  189  cd workspace/
+  190  nano transfer.py 
+  191  python3 transfer.py 
+  192  clear
+  193  ls
+  194  python3 transfer.py 
+  195  exit
+  196  mysql -h 10.1.0.237 -u plant -P 3306
+  197  sudo reboot
+  198  flask run --host=0.0.0.0
+  199  export FLASK_APP=/home/ubuntu/Desktop/Plant_IoT_Example/frontend/routes.py
+  200  flask run --host=0.0.0.0
+  201  /bin/python3 -m pip install -U autopep8
+  202  vncserver
+  203  sudo apt-get update
+  204  vncserver list
+  205  vncserver --list
+  206  vncserver --kill :1
+  207  vncserver --kill :2
+  208  vncserver --list
+  209  vncserver
+  210  vncserver --list
+  211  ls
+  212  sudo su
+  213  vncserver --list
+  214  vncserver --kill :1
+  215  su marvin
+  216  vncserver
+  217  vncserver --list
+  218  sudo chmod +x /etc/init.d/vncserver
+  219  nano /ect/init.d/vncserver
+  220  sudo deluser --remove-home marvin
+  221  ls
+  222  vncserver
+  223  vncserver --list
+  224  vncserver --kill :1
+  225  vncserver --kill :2
+  226  vncserver
+  227  sudo apt remove tigervnc-standalone-server -y 
+  228  sudo apt install xfce4 xfce4-goodies
+  229  sudo apt install xfce4 xfce4-goodies tightvncserver
+  230  vncserver
+  231  vncserver --list
+  232  vncserver -kill :1
+  233  nano ~/.vnc/xstartup
+  234  vncserver
+  235  nano /etc/systemd/system/vncserver.service
+  236  sudo nano /etc/systemd/system/vncserver.service
+  237  nano /etc/systemd/system/vncserver.service
+  238  sudo nano /etc/systemd/system/vncserver.service
+  239  systemctl daemon-reload
+  240  sudo systemctl daemon-reload
+  241  systemctl enable --now vncserver
+  242  sudo systemctl enable --now vncserver
+  243  sudo reboot
+  244  vncserver --list
+  245  ufw allow 5901/tcp
+  246  sudo ufw allow 5901/tcp
+  247  vncserver
+  248  nano /home/ubuntu/.vnc/plan-iot-dut80bwc:1.log
+  249  sudo nano /usr/bin/vncserver
+  250  ls
+  251  sudo apt remove xfce4 xfce4-goodies tightvncserver
+  252  sudo apt-get update
+  253  sudo apt-get upgrade
+  254  sudo apt autoremove
+  255  sudo apt install xfce4 xfce4-goodies
+  256  sudo apt install tigervnc-standalone-server tigervnc-common
+  257  vncserver
+  258  vncserver --list
+  259  vncserver --kill :2
+  260  vncserver --kill :1
+  261  vncserver
+  262  vncserver --list
+  263  cd .vnc
+  264  ls
+  265  cd ..
+  266  rm -rf .vnc/
+  267  vncserver --list
+  268  vncserver
+  269  vncserver --list
+  270  vncserver
+  271  vncserver --list
+  272  sudo vncserver --list
+  273  cd .vnc
+  274  ls
+  275  nano xstratup
+  276  sudo chmod +x ~/.vnc/xstartup
+  277  vncserver
+  278  sudo reboot
+  279  vncserver
+  280  tigervncserver -xstartup /usr/bin/xterm
+  281  vncserver --list
+  282  vncserver --kill :1
+  283  vncserver
+  284  sudo vncserver
+  285  ls
+  286  nano workspace/
+  287  cd workspace/k
+  288  cd workspace/
+  289  ls
+  290  nano transfer.py 
+  291  cd ..
+  292  cd Desktop/
+  293  ls
+  294  cd Plant_IoT_Example/
+  295  ls
+  296  git push dev_kai
+  297  git push
+  298  git add .
+  299  git commit
+  300  git commit -m "frontend"
+  301  git config --global user.email "you@example.com"
+  302  git config --global user.name "Your Name"
+  303  git commit -m "frontend"
+  304  git push
+  305  git pull
+  306  git push
+  307  exit
+  308  ls
+  309  cd workspace/
+  310  ls
+  311  nano transfer.py 
+  312  history
+  313  ls
+  314  cd ..
+  315  cd Desktop/
+  316  ls
+  317  cd Plant_IoT_Example/
+  318  echo history > history.txt
+  319  ls
+  320  git push
+  321  git commit
+  322  git add .
+  323  git commit
+  324  git push
+  325  history > history.txt

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<link rel="stylesheet" type="text/css" href="/static/css/global.css" media="screen" />
+<script type="text/javascript" src="/static/js/details.js"></script>
+
+<!-- Adding some style to table (OPTIONAL) -->
+<style type="text/css">
+    th:tr {
+        color: blue;
+
+    }
+
+    tr:nth-of-type(2n) {
+        border: 1px solid black;
+        background-color: rgba(150, 150, 150, 0.5);
+
+    }
+
+    td {
+        padding: 8px 8px;
+        border: 1px solid black;
+    }
+</style>
+
+<body>
+
+    <h1>Plant details</h1>
+
+    <table style="margin-left: 20px;">
+        <!-- Table headers -->
+        <th>
+            <tr style="color: green; ">
+                <td>Nb</td>
+                <td>time</td>
+                <td>Sensor</td>
+                <td>Temperature</td>
+                <td>Humidity</td>
+                <td>Soil</td>
+
+            </tr>
+        </th>
+
+        <!-- For loop logic of jinja template -->
+        {%for i in range(0, len)%}
+
+        <!-- table rows -->
+        <tr>
+            <td>{{i}}</td>
+            <td>{{plants[i][7]}}</td>
+            <td>{{plants[i][6]}}</td>
+            <td>{{plants[i][3]}}</td>
+            <td>{{plants[i][4]}}</td>
+            <td>{{plants[i][8]}}</td>
+            {%endfor%}
+
+        </tr>
+
+    </table>
+
+
+    <button id="btn_back" class="button">Back to main</button>
+
+</body>
+
+</html>
