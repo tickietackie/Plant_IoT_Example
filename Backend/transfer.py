@@ -27,7 +27,6 @@ def database_check_ids(json_data):
     get_val = (data_id)
     cursorC.execute(get_id, (data_id,))
     row = cursorC.fetchone()
-    data_id = row[0]
     if row == None:
         #create id when mac_address has no id
         create_id = "INSERT INTO plant (name,mac_address) VALUES(%s,%s)"
@@ -38,6 +37,7 @@ def database_check_ids(json_data):
         get_val = (data_id)
         cursorC.execute(get_id, (data_id,))
         data_id = cursorC.fetchone()
+        data_id = row[0]
         cursorC.close()
         dbconC.close()
         database_insert_plantdata(json_data,data_id)
