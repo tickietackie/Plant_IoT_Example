@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request
 import mysql.connector
 db_connection = mysql.connector.connect(
     host="10.1.0.237",
-    user="plant",
+    user="plant2",
     database="plantiot"
 )
 my_database = db_connection.cursor()

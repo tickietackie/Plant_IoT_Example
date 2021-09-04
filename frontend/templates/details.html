@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <link rel="stylesheet" type="text/css" href="/static/css/global.css" media="screen" />
+<script type="text/javascript" src="/static/js/details.js"></script>
 
 <!-- Adding some style to table (OPTIONAL) -->
 <style type="text/css">
@@ -23,16 +24,18 @@
 
 <body>
 
+    <h1>Plant details</h1>
+
     <table style="margin-left: 20px;">
         <!-- Table headers -->
         <th>
             <tr style="color: green; ">
                 <td>Nb</td>
-                <td>plant id</td>
-                <td>temperature</td>
-                <td>humidity</td>
-                <td>soil</td>
-                <td></td>
+                <td>time</td>
+                <td>Sensor</td>
+                <td>Temperature</td>
+                <td>Humidity</td>
+                <td>Soil</td>
 
             </tr>
         </th>
@@ -43,21 +46,19 @@
         <!-- table rows -->
         <tr>
             <td>{{i}}</td>
-            <td>{{plants[i][2]}}</td>
-            <td></td>
-            <td>
-                <button class="btn_details">details</button>
-                <button class="btn_edit">edit</button>
-                <button class="btn_delete">delete</button>
-            </td>
-
+            <td>{{plants[i][7]}}</td>
+            <td>{{plants[i][6]}}</td>
+            <td>{{plants[i][3]}}</td>
+            <td>{{plants[i][4]}}</td>
+            <td>{{plants[i][8]}}</td>
             {%endfor%}
 
         </tr>
 
     </table>
 
-    <button class="button">Back to main</button>
+
+    <button id="btn_back" class="button">Back to main</button>
 
 </body>
 

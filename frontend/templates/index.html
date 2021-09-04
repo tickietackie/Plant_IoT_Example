@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 
-<!-- Adding some style to table (OPTIONAL) -->
+<link rel="stylesheet" type="text/css" href="/static/css/global.css" media="screen" />
+
+<script type="text/javascript" src="/static/js/index.js"></script>
+
+<!--Adding some style to table(OPTIONAL)-->
 <style type="text/css">
     th:tr {
         color: blue;
@@ -21,6 +25,8 @@
 
 <body>
 
+    <h1>Plant overview</h1>
+
     <table style="margin-left: 20px;">
         <!-- Table headers -->
         <th>
@@ -39,6 +45,7 @@
         <!-- table rows -->
         <tr>
             <td>{{i}}</td>
+            <td style="display: none;">{{plants[i][0]}}</td>
             <td>{{plants[i][2]}}</td>
             <td></td>
             <td>
