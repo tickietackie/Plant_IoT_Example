@@ -14,3 +14,19 @@ secret.h has to look like the following:
 #define MQTT_USERNAME ""
 #define MQTT_PASSWD ""
 ```
+
+The cred.py hat to look like the following:
+
+```
+login = {
+    'db_user' : 'user',
+    'db_password' : 'pw',
+    'host' : 'hostip',
+    'database' : 'dbname',
+    'port' : 'port',
+    'brokeraddress' : 'address',
+    'mqtt_user' : 'user',
+    'mqtt_password' : 'pw',
+    'mqtt_topic' : 'topic',
+}
+```
