@@ -36,8 +36,11 @@ DHT dht(DHTPin, DHT11); // Construct DHT Object for gathering data
 #error Unsupported hardware
 #endif
 
-float Temperature;
-float Humidity;
+float temperature;
+float humidity;
+
+// Soil Moisture Sensor
+#define SoilSensorPin 32  // used for ESP32
 
 // WIFI settings (MODIFY TO YOUR WIFI SETTINGS!)
 const char ssid[] = SECRET_SSID;       // your network SSID (name)
@@ -51,7 +54,7 @@ const char outTopic[] = OUT_TOPIC;
 const int mqtt_port = 1883;
 const char* statusTopic = "dbt1/plantDataGroup5/dht11/status"; // set a uniqie topic by setting a username here!
 const String clientId = CLIENT_ID;
-String plantId = "";
+String areaId = "";
 
 //location service
 const char* Host = "www.unwiredlabs.com";
@@ -76,6 +79,8 @@ PubSubClient client(espClient); // The MQTT client
 #define MSG_BUFFER_SIZE  (256) // Define the message buffer max size 
 char msg[MSG_BUFFER_SIZE]; // Define the message buffer
 
+unsigned long locationId = 0;
+
 /**
    This function will be called when attempting connections to the
    WiFi. DO NOT TOUCH UNTIL YOU KNOW WHAT YOU'RE DOING!
@@ -96,7 +101,28 @@ void setup_wifi() {
     Serial.print(".");
   }
 
-  plantId = WiFi.macAddress();
+  areaId = WiFi.macAddress();
+
+  if (areaId == "08:3A:F2:AA:85:44") {  //Steffen
+    locationId = 0;
+  }
+  else if (areaId == "8C:AA:B5:7C:F9:86") {   //Kai
+    locationId = 1;
+  }
+  else if (areaId == "08:3A:F2:6E:29:A8") {   //Marvin
+    locationId = 2;
+  }
+  else if (areaId == "AC:67:B2:37:82:C0") { //Mehmet
+    locationId = 3;
+  }
+  else {
+    Serial.println("location could not be found for mac address: ");
+    Serial.println("Fatal error. abort.");
+    const int i = 0;
+    while (i == 0) {
+      const int stayHere = 0;
+    }
+  }
 
   // if analog input pin 0 is unconnected, random analog
   // noise will cause the call to randomSeed() to generate
@@ -110,7 +136,6 @@ void setup_wifi() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());  // IP-Adress is obtained by DHCP, so write it to the console.*/
 }
-
 
 /**
    This function is called when we need to reconnect to the MQTT server.
@@ -151,22 +176,60 @@ void callback(char* topic, byte* payload, unsigned int length) {
    measured values (humidity and temperature) are set to
    the JSON document.
 */
-void setJSONData(float humidity, float temp) {
+void setJSONData(float humidity, float temp, float soil) {
   doc.clear();
   doc["transport_id"] = random(2147483647); //Max random value between 0 and 2147483647, 32 bit
-  doc["id"] = plantId;
-  doc["sensor"] = "DHT11";
+  doc["location_id"] = locationId;
+  doc["area_id"] = areaId;
   doc["time"] = timeClient.getEpochTime();
-  doc["humidity"] = humidity;
-  doc["temperature"] = temp;
+  
+  DynamicJsonDocument sensorDoc(512);
+  JsonObject sensor = sensorDoc.createNestedObject("DHT11");
+  sensor["value"] = temp;
+  sensor["unit"] = "C";
+  sensor["type"] = "temperature";
+  sensor["name"] = "DHT11";
+  doc["sensor"][0] = sensor;
+
+  sensor.clear();
+
+  sensor["value"] = humidity;
+  sensor["unit"] = "%";
+  sensor["type"] = "humidity";
+  sensor["name"] = "DHT11";
+  doc["sensor"][1] = sensor;
+
+  sensor.clear();
+
+  sensor["value"] = soil;
+  sensor["unit"] = "";
+  sensor["type"] = "soil";
+  sensor["name"] = "hygrometer";
+  doc["sensor"][2] = sensor;
+
+  /* add further sensors here:
+   *  
+   *  sensor.clear();
+      sensor["value"] = ;
+      sensor["unit"] = "";
+      sensor["type"] = "";
+      sensor["name"] = "";
+      doc["sensor"][4] = sensor;
+   *  
+   */
 }
+
+/*
+   json should have sensors in array and then for each sensor the value
+*/
+
 
 /**
    The setup function is called when the esp is powered on
 */
 void setup() {
   Serial.begin(115200);  // Set serial connection to 115200bps
-  
+
   pinMode(DHTPin, INPUT); // Set DHT-Pin to INPUT-Mode (so we can read data from it)
   dht.begin();
   setup_wifi();          // Call setup_wifi function
@@ -191,12 +254,17 @@ void loop() {
   Serial.println("scan done");
 
   // receive measured values from DHT11
-  Temperature = dht.readTemperature(); // Gets the values of the temperature
-  Humidity = dht.readHumidity(); // Gets the values of the humidity
-  //Temperature = 10;
-  //Humidity = 5;
+  temperature = dht.readTemperature(); // Gets the values of the temperature
+  humidity = dht.readHumidity(); // Gets the values of the humidity
+  //temperature = 10;
+  //humidity = 5;
+
+  // receive measured values from soil moisture sensor
+  float soil = analogRead(SoilSensorPin);
+  delay(30000);
+       
   // set measured data to preprared JSON document
-  setJSONData(Humidity, Temperature);
+  setJSONData(humidity, temperature, soil);
 
   // serialize JSON document to a string representation
   serializeJsonPretty(doc, msg);
