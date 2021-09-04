@@ -249,10 +249,6 @@ void loop() {
     reconnect();
   }
 
-  // WiFi.scanNetworks will return the number of networks found
-  int n = WiFi.scanNetworks();
-  Serial.println("scan done");
-
   // receive measured values from DHT11
   temperature = dht.readTemperature(); // Gets the values of the temperature
   humidity = dht.readHumidity(); // Gets the values of the humidity
