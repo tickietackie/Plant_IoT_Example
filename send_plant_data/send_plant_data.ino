@@ -36,11 +36,8 @@ DHT dht(DHTPin, DHT11); // Construct DHT Object for gathering data
 #error Unsupported hardware
 #endif
 
-float temperature;
-float humidity;
-
-// Soil Moisture Sensor
-#define SoilSensorPin 32  // used for ESP32
+float Temperature;
+float Humidity;
 
 // WIFI settings (MODIFY TO YOUR WIFI SETTINGS!)
 const char ssid[] = SECRET_SSID;       // your network SSID (name)
@@ -70,7 +67,7 @@ double longitude = 0.0;
 double accuracy = 0.0;
 
 // JSON-Document
-const size_t capacity = JSON_OBJECT_SIZE(512); // Increase size if you want to transmit larger documents
+const size_t capacity = JSON_OBJECT_SIZE(1024); // Increase size if you want to transmit larger documents
 DynamicJsonDocument doc(capacity);
 
 WiFiClient espClient;  // The WIFI Client
@@ -137,6 +134,8 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());  // IP-Adress is obtained by DHCP, so write it to the console.*/
 }
 
+
+
 /**
    This function is called when we need to reconnect to the MQTT server.
    ALSO DO NOT TOUCH UNTIL YOU KNOW WHAT YOU'RE DOING!
@@ -183,7 +182,7 @@ void setJSONData(float humidity, float temp, float soil) {
   doc["area_id"] = areaId;
   doc["time"] = timeClient.getEpochTime();
   
-  DynamicJsonDocument sensorDoc(100);
+  DynamicJsonDocument sensorDoc(250);
   JsonObject sensor = sensorDoc.createNestedObject("DHT11");
   sensor["value"] = temp;
   sensor["unit"] = "C";
@@ -210,6 +209,7 @@ void setJSONData(float humidity, float temp, float soil) {
   /* add further sensors here:
    *  
    *  sensor.clear();
+
       sensor["value"] = ;
       sensor["unit"] = "";
       sensor["type"] = "";
@@ -250,17 +250,13 @@ void loop() {
   }
 
   // receive measured values from DHT11
-  temperature = dht.readTemperature(); // Gets the values of the temperature
-  humidity = dht.readHumidity(); // Gets the values of the humidity
-  //temperature = 10;
-  //humidity = 5;
-
-  // receive measured values from soil moisture sensor
-  float soil = analogRead(SoilSensorPin);
-  delay(30000);
-       
+  Temperature = dht.readTemperature(); // Gets the values of the temperature
+  Humidity = dht.readHumidity(); // Gets the values of the humidity
+  //Temperature = 10;
+  //Humidity = 5;
   // set measured data to preprared JSON document
-  setJSONData(humidity, temperature, soil);
+  const int soil = 0;
+  setJSONData(Humidity, Temperature, soil);
 
   // serialize JSON document to a string representation
   serializeJson(doc, msg);
