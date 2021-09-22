@@ -53,27 +53,14 @@ const char* statusTopic = "dbt1/plantDataGroup5/dht11/status"; // set a uniqie t
 const String clientId = CLIENT_ID;
 String areaId = "";
 
-//location service
-const char* Host = "www.unwiredlabs.com";
-String endpoint = "/v2/process.php";
-// UnwiredLabs API_Token. Signup here to get a free token https://unwiredlabs.com/trial
-String token = "pk.07fb53726988595d496d9b7ee9bb72f2";
-
-String jsonString = "{\n";
-
-// Variables to store unwiredlabs response
-double latitude = 0.0;
-double longitude = 0.0;
-double accuracy = 0.0;
-
 // JSON-Document
-const size_t capacity = JSON_OBJECT_SIZE(1024); // Increase size if you want to transmit larger documents
+const size_t capacity = JSON_OBJECT_SIZE(2500); // Increase size if you want to transmit larger documents
 DynamicJsonDocument doc(capacity);
 
 WiFiClient espClient;  // The WIFI Client
 PubSubClient client(espClient); // The MQTT client
 
-#define MSG_BUFFER_SIZE  (1024) // Define the message buffer max size 
+#define MSG_BUFFER_SIZE (4000) // Define the message buffer max size 
 char msg[MSG_BUFFER_SIZE]; // Define the message buffer
 
 unsigned long locationId = 0;
@@ -181,42 +168,38 @@ void setJSONData(float humidity, float temp, float soil) {
   doc["location_id"] = locationId;
   doc["area_id"] = areaId;
   doc["time"] = timeClient.getEpochTime();
+
+  StaticJsonDocument<600> docArray;
   
-  DynamicJsonDocument sensorDoc(250);
+  // create an empty array
+  JsonArray array = docArray.to<JsonArray>();
+
+  StaticJsonDocument<200> sensorDoc;
   JsonObject sensor = sensorDoc.createNestedObject("DHT11");
   sensor["value"] = temp;
   sensor["unit"] = "C";
   sensor["type"] = "temperature";
   sensor["name"] = "DHT11";
-  doc["sensor"][0] = sensor;
-
-  sensor.clear();
+  
+  // add some values
+  array.add(sensor);
 
   sensor["value"] = humidity;
   sensor["unit"] = "%";
   sensor["type"] = "humidity";
   sensor["name"] = "DHT11";
-  doc["sensor"][1] = sensor;
 
-  sensor.clear();
+  array.add(sensor);
 
-  sensor["value"] = soil;
-  sensor["unit"] = "";
+  sensor["value"] = 0;
+  sensor["unit"] = "1";
   sensor["type"] = "soil";
   sensor["name"] = "hygrometer";
-  doc["sensor"][2] = sensor;
 
-  /* add further sensors here:
-   *  
-   *  sensor.clear();
+  array.add(sensor);
 
-      sensor["value"] = ;
-      sensor["unit"] = "";
-      sensor["type"] = "";
-      sensor["name"] = "";
-      doc["sensor"][4] = sensor;
-   *  
-   */
+  doc["sensor"] = array;
+
 }
 
 /*
@@ -255,7 +238,7 @@ void loop() {
   //Temperature = 10;
   //Humidity = 5;
   // set measured data to preprared JSON document
-  const int soil = 0;
+  const float soil = 0;
   setJSONData(Humidity, Temperature, soil);
 
   // serialize JSON document to a string representation
@@ -264,6 +247,7 @@ void loop() {
 
   // publish to MQTT broker
   client.publish(outTopic, msg);
+  client.setBufferSize(512);
   client.loop();
   timeClient.update();
 
