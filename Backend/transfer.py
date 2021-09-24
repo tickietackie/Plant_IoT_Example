@@ -20,7 +20,7 @@ def on_message(client, userdata, msg):
         database_location_id(data)
                
 
-def database_location_id(json_data)
+def database_location_id(json_data):
     dbconL = mysql.connector.connect(**config)
     cursorL = dbconL.cursor()
     loc_id = json_data['location_id']
@@ -30,11 +30,11 @@ def database_location_id(json_data)
     dbconL.commit()
     cursorL.close()
     dbconL.close()
-    database_check_area_id(data,loc_id) 
+    database_check_area(json_data,loc_id) 
 
 def database_check_area(json_data,loc_id):
     dbconA = mysql.connector.connect(**config)
-    cursorA = dbconC.cursor()
+    cursorA = dbconA.cursor()
     data_id = json_data['area_id']
     get_id = "select id from area where mac_address = %s"
     get_val = (data_id)
@@ -75,7 +75,7 @@ def database_insert_sensordata(json_data,area_id):
     data_sensor_area_id = area_id
     for x in range(0,3):
         dbconI = mysql.connector.connect(**config)
-        cursorI = dbconC.cursori()
+        cursorI = dbconI.cursori()
         data_sensor_value = json_data['sensor'][i]['value']
         data_sensor_unit = json_data['sensor'][i]['unit']
         data_sensor_type = json_data['sensor'][i]['type']
