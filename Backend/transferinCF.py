@@ -16,6 +16,7 @@ if 'VCAP_SERVICES' in os.environ:
         sqlport = creds['port']
         sqldb = creds['name']
 
+
 config = {
         'user': sqluser,
         'password': sqlpassword,
@@ -25,77 +26,76 @@ config = {
     }
 
 def on_message(client, userdata, msg):
-
         print("message received " ,str(msg.payload.decode("utf-8")))
         data = json.loads(str(msg.payload.decode("utf-8")))
-        database_location_id(data)
+        database_location_set_id(data)
 
 def database_location_id(json_data):
-    dbconL = mysql.connector.connect(**config)
-    cursorL = dbconL.cursor()
+    dbconN = mysql.connector.connect(**config)
+    cursorN = dbconN.cursor(buffered=True)
     loc_id = json_data['location_id']
-    set_loc = "INSERT IGNORE INTO location (id, name) VALUES(%s,%s)"
-    val_loc = (loc_id,"")
-    cursorL.execute(set_loc, (val_loc,))
+    query_get_loc = f"select * from location where id = {loc_id}"
+    cursorN.execute(query_get_loc)
+    msg=cursorN.fetchall()
+    dbconN.commit()
+    cursorN.close()
+    dbconN.close()
+
+def database_location_set_id(json_data):
+    dbconL = mysql.connector.connect(**config)
+    cursorL = dbconL.cursor(buffered=True)
+    loc_id = json_data['location_id']
+    query_set_loc = f"insert ignore into  location (id, name) VALUES ({loc_id}, 'Marv home')"
+    cursorL.execute(query_set_loc)
     dbconL.commit()
     cursorL.close()
     dbconL.close()
-    database_check_area(json_data,loc_id) 
+    database_check_area(json_data,loc_id)
 
 def database_check_area(json_data,loc_id):
     dbconA = mysql.connector.connect(**config)
-    cursorA = dbconA.cursor()
+    cursorA = dbconA.cursor(buffered=True)
     data_id = json_data['area_id']
-    get_id = "select id from area where mac_address = %s"
-    get_val = (data_id)
-    cursorA.execute(get_id, (data_id,))
+    get_id = f"""select id from area where mac_address = '{data_id}'"""
+    cursorA.execute(get_id)
     row = cursorA.fetchone()
     if row == None:
-        #create id when mac_address has no id
-        create_id = "INSERT INTO area (location_id,mac_address) VALUES(%s,%s)"
-        create_val = (loc_id,data_id)
-        cursorA.execute(create_id,create_val)
+        create_id = f"""insert ignore area (location_id,mac_address) VALUES({loc_id},'{data_id}')"""
+        cursorA.execute(create_id)
         dbconA.commit()
-        get_id = """select id from area where mac_address = %s"""
-        get_val = (data_id)
-        cursorA.execute(get_id, (data_id,))
-        row = cursorA.fetchone()
-        data_id = row[0]
+        database_check_area(json_data,loc_id)
         cursorA.close()
         dbconA.close()
-        database_insert_sensordata(json_data,data_id)
     else:
-        data_id = row[0]
-        database_insert_sensordata(json_data,data_id)
+        cursorA.close()
+        dbconA.close()
+        area_id=row[0]
+        database_insert_sensordata(json_data,area_id)
 
 def database_insert_sensordata(json_data,area_id):
-    #data prep
     if 'transport_id' in json_data:
         data_sensor_transport_id = json_data['transport_id']
     else:
         return
-
-    #data time prep
     try:
         data_time = json_data['time']
         data_sensor_time = datetime.datetime.fromtimestamp(data_time).strftime('%Y-%m-%d %H:%M:%S')
     except:
         return
-
-    data_sensor_area_id = area_id
-    for x in range(0,3):
-        dbconI = mysql.connector.connect(**config)
-        cursorI = dbconI.cursor()
+    dbconS = mysql.connector.connect(**config)
+    cursorS = dbconS.cursor(buffered=True)
+    i = 0
+    while i < 3:
         data_sensor_value = json_data['sensor'][i]['value']
         data_sensor_unit = json_data['sensor'][i]['unit']
         data_sensor_type = json_data['sensor'][i]['type']
         data_sensor_name = json_data['sensor'][i]['name']
-        add_data = "INSERT INTO plant_data (area_id, name, value, unit, type, time, transport_id) VALUES (%s,%s,%s,%s,%s,%s,%s)"
-        val = (data_sensor_area_id, data_sensor_name, data_sensor_value, data_sensor_unit, data_sensor_type, data_sensor_time, data_sensor_transport_id)
-        cursorI.execute(add_data,val)
-        dbconI.commit()
-        cursorI.close()
-        dbconI.close()
+        query_sensor_set = f"""insert into sensor_data (area_id,name, value, unit, type, time, transport_id) VALUES('{area_id}','{data_sensor_name}','{data_sensor_value}','{data_sensor_unit}','{data_sensor_type}','{data_sensor_time}','{data_sensor_transport_id}')"""
+        cursorS.execute(query_sensor_set)
+        dbconS.commit()
+        i=i+1
+    cursorS.close()
+    dbconS.close()
 
 #mqtt connection info
 client = mqtt.Client()
