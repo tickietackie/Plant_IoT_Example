@@ -45,7 +45,8 @@ def database_location_set_id(json_data):
     dbconL = mysql.connector.connect(**config)
     cursorL = dbconL.cursor(buffered=True)
     loc_id = json_data['location_id']
-    query_set_loc = f"insert ignore into  location (id, name) VALUES ({loc_id}, 'Marv home')"
+    loc_name = cred.login['location_name']
+    query_set_loc = f"""insert ignore into  location (id, name) VALUES ({loc_id}, '{loc_name}')"""
     cursorL.execute(query_set_loc)
     dbconL.commit()
     cursorL.close()
@@ -90,7 +91,8 @@ def database_insert_sensordata(json_data,area_id):
         data_sensor_unit = json_data['sensor'][i]['unit']
         data_sensor_type = json_data['sensor'][i]['type']
         data_sensor_name = json_data['sensor'][i]['name']
-        query_sensor_set = f"""insert into sensor_data (area_id,name, value, unit, type, time, transport_id) VALUES('{area_id}','{data_sensor_name}','{data_sensor_value}','{data_sensor_unit}','{data_sensor_type}','{data_sensor_time}','{data_sensor_transport_id}')"""
+        query_sensor_set = f"""insert into sensor_data (area_id, name, value, unit, type, time, transport_id) VALUES('{area_id}','{data_sensor_name}','{data_sensor_value}','{data_sensor_unit}','{data_sensor_type}','{data_sensor_time}','{data_sensor_transport_id}')"""
+        print (query_sensor_set)
         cursorS.execute(query_sensor_set)
         dbconS.commit()
         i=i+1

@@ -28,5 +28,6 @@ login = {
     'mqtt_user' : 'user',
     'mqtt_password' : 'pw',
     'mqtt_topic' : 'topic',
+    'location_name' : 'loc name'
 }
 ```

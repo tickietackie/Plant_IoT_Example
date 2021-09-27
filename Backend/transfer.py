@@ -34,7 +34,8 @@ def database_location_set_id(json_data):
     dbconL = mysql.connector.connect(**config)
     cursorL = dbconL.cursor(buffered=True)
     loc_id = json_data['location_id']
-    query_set_loc = f"insert ignore into  location (id, name) VALUES ({loc_id}, 'Marv home')"
+    loc_name = cred.login['location_name']
+    query_set_loc = f"""insert ignore into  location (id, name) VALUES ({loc_id}, '{loc_name}')"""
     cursorL.execute(query_set_loc)
     dbconL.commit()
     cursorL.close()
