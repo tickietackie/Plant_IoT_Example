@@ -223,7 +223,7 @@ void setup() {
 
 /*
    This is the main program loop.
-   Evetything is called from here.
+   Everything is called from here.
 */
 void loop() {
   // While the mqtt-connection is not established,
