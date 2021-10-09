@@ -57,7 +57,7 @@ def database_location_set_id(json_data):
     dbconL.close()
     database_check_area(json_data,loc_id)
 
-# check for areaid/device to the location id if it doesnt exist registere device
+#registere device
 def database_check_area(json_data,loc_id):
     dbconA = mysql.connector.connect(**config)
     cursorA = dbconA.cursor(buffered=True)
