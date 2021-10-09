@@ -39,6 +39,11 @@ DHT dht(DHTPin, DHT11); // Construct DHT Object for gathering data
 float Temperature;
 float Humidity;
 
+Soil Moisture Sensor
+#define SoilSensorPin 32  // used for ESP32
+
+float Soil = analogRead(SoilSensorPin);
+
 // WIFI settings (MODIFY TO YOUR WIFI SETTINGS!)
 const char ssid[] = SECRET_SSID;       // your network SSID (name)
 const char password[] = SECRET_PASS;       // your network password (use for WPA, or use as key for WEP)
