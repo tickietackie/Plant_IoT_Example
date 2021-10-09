@@ -6,6 +6,7 @@ import mysql.connector
 import os
 import cred
 
+#get config and env variables
 if 'VCAP_SERVICES' in os.environ:
     vcap = json.loads(os.getenv('VCAP_SERVICES'))
     if 'a9s-mysql101' in vcap:
@@ -25,11 +26,13 @@ config = {
         'port': sqlport
     }
 
+#mqtt on message listener
 def on_message(client, userdata, msg):
         print("message received " ,str(msg.payload.decode("utf-8")))
         data = json.loads(str(msg.payload.decode("utf-8")))
         database_location_set_id(data)
 
+#check for location id 
 def database_location_id(json_data):
     dbconN = mysql.connector.connect(**config)
     cursorN = dbconN.cursor(buffered=True)
@@ -41,6 +44,7 @@ def database_location_id(json_data):
     cursorN.close()
     dbconN.close()
 
+#create a location id
 def database_location_set_id(json_data):
     dbconL = mysql.connector.connect(**config)
     cursorL = dbconL.cursor(buffered=True)
@@ -53,6 +57,7 @@ def database_location_set_id(json_data):
     dbconL.close()
     database_check_area(json_data,loc_id)
 
+# check for areaid/device to the location id if it doesnt exist registere device
 def database_check_area(json_data,loc_id):
     dbconA = mysql.connector.connect(**config)
     cursorA = dbconA.cursor(buffered=True)
@@ -73,6 +78,7 @@ def database_check_area(json_data,loc_id):
         area_id=row[0]
         database_insert_sensordata(json_data,area_id)
 
+#make sensor data usable for the db an insert them
 def database_insert_sensordata(json_data,area_id):
     if 'transport_id' in json_data:
         data_sensor_transport_id = json_data['transport_id']

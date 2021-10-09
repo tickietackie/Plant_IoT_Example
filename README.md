@@ -1,4 +1,5 @@
 # Plant_IoT_Example
+The scripts are build to use cloudfoundry as plattform with a managed mysql db.
 
 To make it work, create a secret.h file at the .ino file.
 

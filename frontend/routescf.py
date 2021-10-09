@@ -2,9 +2,9 @@ from flask import Flask, render_template, redirect, url_for, request
 import mysql.connector
 import json
 import os
-
 port = int(os.getenv("PORT"))
 
+#get config and env variables
 if 'VCAP_SERVICES' in os.environ:
     vcap = json.loads(os.getenv('VCAP_SERVICES'))
     if 'a9s-mysql101' in vcap:
@@ -24,13 +24,12 @@ config = {
     }
 
 
-# making list of pokemons
 plants = []
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
-
+#display the location db
 @app.route('/')
 def homepage():
     dbconH = mysql.connector.connect(**config)
@@ -42,10 +41,10 @@ def homepage():
     cursorH.close()
     dbconH.close()
     return render_template("locations.html", len=len(locations), locations=locations)
-    # return 'Hello, World!'
+  
     
 
-
+#display the plantdetails
 @app.route('/plantDetails')
 def details():
     dbconP = mysql.connector.connect(**config)
@@ -63,7 +62,7 @@ def details():
     else:
         return "Id missing in request."
 
-
+#display the location
 @app.route('/locations')
 def location():
     dbconL = mysql.connector.connect(**config)
@@ -77,7 +76,7 @@ def location():
     return render_template("locations.html", len=len(locations), locations=locations)
     # return 'Hello, World!'
 
-
+#display the area
 @app.route('/location/area')
 def area():
     dbconA = mysql.connector.connect(**config)
@@ -95,7 +94,7 @@ def area():
     else:
         return "Id missing in request."
 
-
+#display all sensor data
 @app.route('/location/area/sensor_data')
 def sensor_data():
     dbconS = mysql.connector.connect(**config)
@@ -130,11 +129,3 @@ def login():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port)
-
-
-# "transport_id": 688989553,
-    # "id": "8C:AA:B5:7C:F9:86",
-    # "sensor": "DHT11",
-    # "time": "09:46:01",
-    # "humidity": 40,
-    # "temperature": 24.7
